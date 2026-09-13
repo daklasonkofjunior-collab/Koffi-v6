@@ -1,0 +1,17 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.core.clipboard import Clipboard
+
+class KoffiV6(App):
+    def build(self):
+        t="KOFFI V6 PRO 13/09\n1. Eskilsminne-Tvaaker: 1X\n2. Bohemians-Drogheda: -3.5 Buts\n3. Derry-Galway: 1X\nCote 2.40"
+        b=BoxLayout(orientation='vertical', padding=20, spacing=15)
+        b.add_widget(Label(text='KOFFI V6 PRO', bold=True, font_size=28))
+        b.add_widget(Label(text=t, font_size=18))
+        btn=Button(text='COPIER LE TICKET', background_color=(0,1,0,1), size_hint_y=0.4)
+        btn.bind(on_press=lambda x: Clipboard.copy(t))
+        b.add_widget(btn)
+        return b
+KoffiV6().run()
