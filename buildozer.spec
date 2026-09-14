@@ -1,26 +1,17 @@
-[app]
-title = Koffi V6
-package.name = koffiv6
-package.domain = org.koffi.v6
+# Ligne 12: ton titre
+title = KOFFI V6
 
-source.dir =.
-source.include_exts = py,png,jpg,kv,atlas,json
-
-version = 0.6
+# Ligne 40-50: requirements
 requirements = python3,kivy
 
-orientation = portrait
-fullscreen = 0
-
-[buildozer]
-log_level = 2
-warn_on_root = 1
-
-[app:android]
-android.accept_sdk_license_agreement = True
+# Ligne 85-95: LA PARTIE QUI PLANTAIT - remplace par ça
 android.api = 33
 android.minapi = 21
 android.ndk = 25b
 android.sdk = 33
-android.archs = arm64-v8a, armeabi-v7a
+android.accept_sdk_license_agreements = True
+android.archs = armeabi-v7a
 p4a.branch = master
+
+# Ligne 15: log pour voir l'erreur
+log_level = 2
