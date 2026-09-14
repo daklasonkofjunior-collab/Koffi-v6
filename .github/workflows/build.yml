@@ -14,20 +14,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y openjdk-17-jdk zip unzip libssl-dev libffi-dev
-          pip install buildozer cython==0.29.33
-
-      - name: Accept Android Licenses
-        run: |
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          yes | buildozer android debug || true
-          ANDROID_SDK=~/.buildozer/android/platform/android-sdk
-          yes | $ANDROID_SDK/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          yes | $ANDROID_SDK/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          sudo apt install -y openjdk-17-jdk zip unzip libssl-dev libffi-dev libncurses5-dev libtool pkg-config
+          pip install Cython==0.29.33 buildozer
 
       - name: Build APK
-        run: buildozer android debug
+        run: |
+          buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
