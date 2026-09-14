@@ -20,17 +20,28 @@ jobs:
       - name: Install Buildozer
         run: |
           pip install --upgrade pip
-          pip install buildozer cython
+          pip install buildozer cython==0.29.36
 
-      - name: Create License Files Manually
+      - name: Fix SDKMANAGER path
         run: |
+          mkdir -p $HOME/.buildozer/android/platform/android-sdk/tools/bin
           mkdir -p $HOME/.buildozer/android/platform/android-sdk/licenses
           echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
           echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
           echo "24333f8a63b6825ea9c5514f83c1059f6ea6b044" >> $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          # Si buildozer a déjà téléchargé cmdline-tools, on le copie à l'ancien endroit où il le cherche
+          if [ -d "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin" ]; then
+            cp $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager $HOME/.buildozer/android/platform/android-sdk/tools/bin/ || true
+          fi
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
 
       - name: Build APK
         run: |
           buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: bara-face-apk
+          path: bin/*.apk
