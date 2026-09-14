@@ -5,22 +5,29 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Install dependencies
         run: |
+          pip install buildozer cython
           sudo apt update
-          sudo apt install -y openjdk-17-jdk zip unzip python3-pip
-          pip install --upgrade pip
-          pip install buildozer cython==0.29.36
+          sudo apt install -y openjdk-17-jdk unzip
+      - name: Accept licenses
+        run: |
+          mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+          cd $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip
+          mkdir -p latest
+          mv cmdline-tools/* latest/ 2>/dev/null || true
+          yes | latest/bin/sdkmanager --licenses
+          latest/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33" "platform-tools"
       - name: Build APK
         run: |
-          yes | sdkmanager --licenses || true
           buildozer android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: KOFFI-V6-APK
+          name: apk
           path: bin/*.apk
