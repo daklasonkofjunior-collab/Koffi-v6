@@ -5,20 +5,22 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - uses: android-actions/setup-android@v3
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y openjdk-17-jdk zip unzip
+          sudo apt install -y openjdk-17-jdk zip unzip python3-pip
+          pip install --upgrade pip
           pip install buildozer cython==0.29.36
-          yes | sdkmanager --licenses
       - name: Build APK
-        run: buildozer android debug
+        run: |
+          yes | sdkmanager --licenses || true
+          buildozer android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: KOFFI-V6-APK-FINAL
+          name: KOFFI-V6-APK
           path: bin/*.apk
